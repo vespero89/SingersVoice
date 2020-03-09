@@ -27,11 +27,11 @@ def wav_file_list(source):
 # calcola uno spettrogramma
 def spectrogram(filepath, fs, N, overlap, win_type='hamming'):
     # Load an audio file as a floating point time series
-    x, fs = librosa.core.load(filepath, sr=fs)
+    x, fs = librosa.core.load(filepath, sr=fs, offset=5.0, duration=5.0)
     # Returns: np.ndarray [shape=(1 + n_fft/2, t), dtype=dtype], dtype=64-bit complex
     X = librosa.core.stft(x, n_fft=N, window=signal.get_window(win_type, N), hop_length=N - overlap, center=False)
     # Sxx = np.abs(X)**2
-    Sxx = librosa.logamplitude(np.abs(X) ** 2, ref_power=np.max)
+    Sxx = librosa.core.power_to_db(X)
 
     return Sxx
 
@@ -46,9 +46,8 @@ def extract_spectrograms(source, dest, fs, N, overlap, win_type='hamming'):
 
 # calcola i mel, i delta e i delta-deltas
 def log_mel(filepath, fs, N, overlap, win_type='hamming', n_mels=128, fmin=0.0, fmax=None, htk=True):
-    coefficients = []
     # Load an audio file as a floating point time series
-    x, fs = librosa.core.load(filepath, sr=fs)
+    x, fs = librosa.core.load(filepath, sr=fs, offset=5.0, duration=5.0)
     length = np.round(x.shape[0] / fs)
     print('File Length: {}'.format(length))
     # Power spectrum
@@ -58,9 +57,10 @@ def log_mel(filepath, fs, N, overlap, win_type='hamming', n_mels=128, fmin=0.0, 
     # Filtering
     mel_filtered = np.dot(mel_basis, S)
 
-    mel_filtered = librosa.core.power_to_db(mel_filtered)
-    coefficients.append(mel_filtered)
+    coefficients = librosa.core.power_to_db(mel_filtered)
 
+    delta = librosa.feature.delta(mel_filtered, delta_width*2+1, order=1, axis=-1)
+    coefficients = np.concatenate((coefficients, delta))
     # add delta e delta-deltas
     # coefficients.append(librosa.feature.delta(mel_filtered, delta_width*2+1, order=1, axis=-1))
     # coefficients.append(librosa.feature.delta(mel_filtered, delta_width*2+1, order=2, axis=-1))
@@ -69,12 +69,12 @@ def log_mel(filepath, fs, N, overlap, win_type='hamming', n_mels=128, fmin=0.0, 
 
 
 def mfcc_e(filepath, fs, N, overlap, n_mels=26, fmin=0.0, fmax=None, htk=True, delta_width=None):
-    x, fs = librosa.core.load(filepath, sr=fs)
+    x, fs = librosa.core.load(filepath, sr=fs, offset=5.0, duration=5.0)
     mfcc = librosa.feature.mfcc(y=x, sr=fs, n_mfcc=n_mels, hop_length=N - overlap, fmin=fmin, fmax=fmax, htk=htk)
     delta = librosa.feature.delta(mfcc, delta_width * 2 + 1, order=1, axis=-1)
     acc = librosa.feature.delta(mfcc, delta_width * 2 + 1, order=2, axis=-1)
     coefficients = np.vstack((mfcc, delta, acc))
-    coefficients = mfcc
+    # coefficients = mfcc
 
     return coefficients
 
@@ -105,14 +105,11 @@ def extract_MFCC(source, dest, fs, n_mels, N, overlap, fmin, fmax, htk, delta_wi
 
 if __name__ == "__main__":
 
-    root_dir = path.realpath('../')
+    root_dir = path.realpath('../../')
 
     wav_dir_path = path.join(root_dir, 'dataset_16bit')
-    dest_path_spec = path.join(root_dir, 'dataset', 'spectrograms')
-    dest_path_log_mel = path.join(root_dir, 'dataset', 'logmel_NEW')
-    dest_path_mfcc = path.join(root_dir, 'dataset', 'MFCC')
+    dest_path = path.join('dataset', 'spectrograms')
 
-    dest_path = path.join(root_dir, 'dataset', 'MFCC_2')
     if (not path.exists(dest_path)):
         makedirs(dest_path)
 
@@ -120,15 +117,17 @@ if __name__ == "__main__":
     fft_length = 256
     window_length = 480
     overlap = 160
-    Fs = 44100
-    n_mels = 26
+    Fs = 16000
+    n_mels = 128
     fmin = 0.0
     fmax = Fs / 2
     htk = True
     delta_width = 2
+    offset = 5
+    duration = 5
 
-    #    extract_spectrograms(wav_dir_path, dest_path_spec, Fs, fft_length, overlap, window_type)
-    extract_log_mel(wav_dir_path, dest_path_log_mel, Fs, window_length, overlap, window_type, n_mels, fmin, fmax, htk)
+    # extract_spectrograms(wav_dir_path, dest_path, Fs, fft_length, overlap, window_type)
+    extract_log_mel(wav_dir_path, dest_path, Fs, window_length, overlap, window_type, n_mels, fmin, fmax, htk)
     #    extract_MFCC(wav_dir_path, dest_path, Fs, n_mels, window_length, overlap, fmin, fmax, htk, delta_width)
 
     import os
