@@ -1,39 +1,51 @@
 import os
-from matplotlib import pyplot as plt
-from tensorflow.python.keras.applications.vgg19 import VGG19
 from tensorflow.python.keras.preprocessing import image
-from tensorflow.python.keras.applications.vgg19 import preprocess_input
+#from tensorflow.python.keras.applications.vgg19 import VGG19
+#from tensorflow.python.keras.applications.resnet50 import ResNet50
+from tensorflow.python.keras.applications.xception import Xception
+#from tensorflow.python.keras.applications.resnet50 import preprocess_input
+from tensorflow.python.keras.applications.xception import preprocess_input
 from tensorflow.python.keras.models import Model
 import numpy as np
 
-base_model = VGG19(weights='imagenet')
-model = Model(inputs=base_model.input, outputs=base_model.get_layer('flatten').output)
+# classifier = 'VGG19'
+# model = VGG19(weights='imagenet', include_top=False, pooling='avg')
 
+# classifier = 'ResNet50'
+# model = ResNet50(weights='imagenet', include_top=False, pooling='avg')
 
-# def get_features(img_path):
-#     img = image.load_img(img_path, target_size=(224, 224))
-#     x = image.img_to_array(img)
-#     x = np.expand_dims(x, axis=0)
-#     x = preprocess_input(x)
-#     flatten = model.predict(x)
-#     return list(flatten[0])
+classifier = 'Xception'
+model = Xception(weights='imagenet', include_top=False, pooling='avg')
+
 
 def get_features(img_path):
-    data = np.load(img_path)
-    plt.imshow(data, interpolation='nearest')
-    plt.show()
-    plt.savefig(img_path + '.png')
-    # x = image.img_to_array(img)
-    # x = np.expand_dims(x, axis=0)
-    x = preprocess_input(data)
+    # img = image.load_img(img_path, target_size=(224, 224))
+    img = image.load_img(img_path, target_size=(299, 299))
+    x = image.img_to_array(img)
+    x = np.expand_dims(x, axis=0)
+    x = preprocess_input(x)
     flatten = model.predict(x)
-    # return list(flatten[0])
-    return 0
+    features_name = os.path.join('dataset', 'predictions', classifier, os.path.basename(img_path))
+    np.save(features_name, flatten)
+    return list(flatten[0])
+
+# def get_features(img_path):
+#     data = np.load(img_path)
+#     plt.imshow(data, interpolation='nearest')
+#     plt.show()
+#     plt.savefig(img_path + '.png')
+#     # x = image.img_to_array(img)
+#     # x = np.expand_dims(x, axis=0)
+#     x = preprocess_input(data)
+#     flatten = model.predict(x)
+#     # return list(flatten[0])
+#     return 0
 
 
 X = []
 y = []
-features_path = 'dataset/128Logmel+Deltas'
+feat_type = 'LOGMEL_SPECTROGRAMS'
+features_path = os.path.join('dataset', feat_type)
 
 logmels = []
 for (_, _, filenames) in os.walk(features_path):
@@ -43,6 +55,8 @@ for (_, _, filenames) in os.walk(features_path):
 for lm in logmels:
     X.append(get_features(os.path.join(features_path, lm)))
     y.append(0)
+
+print('Done')
 
 
 # from sklearn.model_selection import train_test_split
