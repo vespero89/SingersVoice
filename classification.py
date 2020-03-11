@@ -1,7 +1,8 @@
 import numpy as np
 import os
 import pandas as pd
-import sklearn
+from sklearn.decomposition import PCA
+from sklearn.cluster import KMeans
 
 
 def get_features(f_name):
@@ -36,6 +37,10 @@ for file in data.iterrows():
         X = np.concatenate((X, features_tmp))
     else:
         X = features_tmp
+
+pca = PCA(n_components=2).fit_transform(X)
+
+
 
 print('Done')
 

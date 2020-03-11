@@ -6,7 +6,7 @@ Created on Fri Feb  3 16:00:29 2017
 @author: daniele
 """
 
-# import matplotlib.pyplot as plt
+
 import numpy as np
 from scipy import signal
 import librosa
