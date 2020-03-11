@@ -6,10 +6,11 @@ Created on Fri Feb  3 16:00:29 2017
 @author: daniele
 """
 
-
+import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
 import librosa
+from librosa import display
 from os import walk, path, makedirs
 
 
@@ -58,9 +59,12 @@ def log_mel(filepath, fs, N, overlap, win_type='hamming', n_mels=128, fmin=0.0, 
     mel_filtered = np.dot(mel_basis, S)
 
     coefficients = librosa.core.power_to_db(mel_filtered)
+    plt.figure()
+    plt.imshow(coefficients)
+    plt.savefig(filepath + '.png')
 
-    delta = librosa.feature.delta(mel_filtered, delta_width*2+1, order=1, axis=-1)
-    coefficients = np.concatenate((coefficients, delta))
+   # delta = librosa.feature.delta(mel_filtered, delta_width*2+1, order=1, axis=-1)
+    #coefficients = np.concatenate((coefficients, delta))
     # add delta e delta-deltas
     # coefficients.append(librosa.feature.delta(mel_filtered, delta_width*2+1, order=1, axis=-1))
     # coefficients.append(librosa.feature.delta(mel_filtered, delta_width*2+1, order=2, axis=-1))
@@ -87,7 +91,7 @@ def extract_log_mel(source, dest, fs, N, overlap, win_type='hamming', n_mels=128
     wav_filenames = wav_file_list(source)
     for w in wav_filenames:
         mels = log_mel(path.join(source, w), fs, N, overlap, win_type, n_mels, fmin, fmax, htk)
-        np.save(path.join(dest, w[0:-4]), mels)
+        # np.save(path.join(dest, w[0:-4]), mels)
 
 
 # calcola i m, i delta e i delta-deltas
