@@ -42,7 +42,7 @@ for file in data.iterrows():
     else:
         X = features_tmp
 
-n_clusters = 2
+n_clusters = 5
 reduced_data = PCA(n_components=4).fit_transform(X)
 
 kmeans = KMeans(init='k-means++', n_clusters=n_clusters, n_init=10, random_state=21).fit(reduced_data)
@@ -51,7 +51,7 @@ kmeans = KMeans(init='k-means++', n_clusters=n_clusters, n_init=10, random_state
 # fig = plt.figure(figsize=(8, 3))
 # fig = plt.figure()
 # fig.subplots_adjust(left=0.02, right=0.98, bottom=0.05, top=0.9)
-colors = ['red', 'blue']
+colors = ['red', 'blue','cyan', 'yellow', 'pink']
 
 # We want to have the same colors for the same cluster from the
 # MiniBatchKMeans and the KMeans algorithm. Let's pair the cluster centers per
@@ -98,10 +98,15 @@ for i in range(0, len(y)):
 
     plt.annotate(date[i], (reduced_data[i, 0], reduced_data[i, 1]))
 
-for k, col in zip(range(n_clusters), colors):
+# for k, col in zip(range(n_clusters), colors):
+#     my_members = k_means_labels == k
+#     cluster_center = k_means_cluster_centers[k]
+#     plt.scatter(cluster_center[0], cluster_center[1], s=200,  c=col, marker='x')
+
+for k in range(n_clusters):
     my_members = k_means_labels == k
     cluster_center = k_means_cluster_centers[k]
-    plt.scatter(cluster_center[0], cluster_center[1], s=200,  c=col, marker='x')
+    plt.scatter(cluster_center[0], cluster_center[1], s=200, c='red', marker='x')
 
 plt.show()
 
