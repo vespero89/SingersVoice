@@ -7,7 +7,6 @@ from sklearn.metrics.pairwise import pairwise_distances_argmin
 import matplotlib.pyplot as plt
 
 
-
 def get_features(f_name):
     vector = np.load(f_name + '.npy')
     return vector
@@ -43,7 +42,7 @@ for file in data.iterrows():
         X = features_tmp
 
 n_clusters = 2
-pca = PCA(n_components=32).fit_transform(X)
+pca = PCA(n_components=16).fit_transform(X)
 X = pca
 kmeans = KMeans(init='k-means++', n_clusters=n_clusters, n_init=10).fit(X)
 # plt.figure()
@@ -72,17 +71,32 @@ colors = ['#4EACC5', '#FF9C34', '#4E9A06']
 k_means_cluster_centers = kmeans.cluster_centers_
 k_means_labels = pairwise_distances_argmin(X, k_means_cluster_centers)
 # KMeans
-ax = fig.add_subplot(111)
+# ax = fig.add_subplot(111)
+# for k, col in zip(range(n_clusters), colors):
+#     my_members = k_means_labels == k
+#     cluster_center = k_means_cluster_centers[k]
+#     # ax.plot(X[my_members, 0], X[my_members, 1], 'w', markerfacecolor=col, marker='.')
+    # ax.plot(cluster_center[0], cluster_center[1], 'o', markerfacecolor=col, markeredgecolor='k', markersize=6)
+# ax.set_title('KMeans')
+# ax.set_xticks(())
+# ax.set_yticks(())
+# plt.show()
+# plt.savefig('kmeans_clusters.png')
+
+plt.figure(figsize=(10, 10))
+for i in range(0, len(y)):
+    if y[i] == 0:
+        plt.scatter(X[i, 0], X[i, 1], s=200,  c='black', marker='.')
+    else:
+        plt.scatter(X[i, 0], X[i, 1], s=200, c='red', marker='.')
+
 for k, col in zip(range(n_clusters), colors):
     my_members = k_means_labels == k
     cluster_center = k_means_cluster_centers[k]
-    ax.plot(X[my_members, 0], X[my_members, 1], 'w', markerfacecolor=col, marker='.')
-    ax.plot(cluster_center[0], cluster_center[1], 'o', markerfacecolor=col, markeredgecolor='k', markersize=6)
-ax.set_title('KMeans')
-ax.set_xticks(())
-ax.set_yticks(())
+    plt.scatter(cluster_center[0], cluster_center[1], s=500,  c=col, marker='*')
+
 plt.show()
-plt.savefig('kmeans_clusters.png')
+# plt.savefig('kmeans_clusters.png')
 
 print('Done')
 
