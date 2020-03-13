@@ -29,12 +29,14 @@ def experiment(sel_criteria, metadata):
     print('Starting Experiment for {} - {}'.format(sel_criteria[0], sel_criteria[1]))
     y = []
     date_rec = []
+    plot_label = []
     for file in metadata.iterrows():
         filename, _ = os.path.splitext(file[1]['filename'])
         label = get_labels(file[1]['class'])
         features_tmp = get_features(os.path.join(features_path, filename))
         y.append(label)
         date_rec.append(file[1]['date_rec'])
+        plot_label.append(file[1]['date_rec'] + '_' + file[1]['class'])
 
         if 'X' in locals():
             X = np.concatenate((X, features_tmp))
@@ -84,7 +86,7 @@ def experiment(sel_criteria, metadata):
             plt.scatter(reduced_data[i, 0], reduced_data[i, 1], s=500, c='green', marker='.')
         else:
             plt.scatter(reduced_data[i, 0], reduced_data[i, 1], s=500, c='black', marker='.')
-        plt.annotate(date_rec[i], (reduced_data[i, 0], reduced_data[i, 1]))
+        plt.annotate(plot_label[i], (reduced_data[i, 0], reduced_data[i, 1]))
 
     for k in range(n_clusters):
         my_members = k_means_labels == k
