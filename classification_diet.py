@@ -22,43 +22,41 @@ def get_labels(string):
     return lab
 
 
-def experiment(sel_criteria, metadata, out_folder, reduce=2):
-    for i in range(0, len(filter_criteria)):
-        metadata = metadata.loc[metadata[filter_criteria[i]] == sel_criteria[i]]
+def experiment(test, metadata, out_folder, reduce=2):
 
     if len(metadata):
-        print('Starting Experiment for {} - {}'.format(sel_criteria[0], sel_criteria[1]))
+        print('Starting Experiment for {}'.format(test))
         y = []
-        date_rec = []
+        singer = []
         plot_label = []
         for file in metadata.iterrows():
             filename, _ = os.path.splitext(file[1]['filename'])
             label = get_labels(file[1]['class'])
             features_tmp = get_features(os.path.join(features_path, filename))
             y.append(label)
-            date_rec.append(file[1]['date_rec'])
-            plot_label.append(file[1]['date_rec'] + '_' + file[1]['class'])
+            singer.append(file[1]['singer'])
+            plot_label.append(file[1]['singer'] + '_' + file[1]['date_rec'] + '_' + file[1]['class'])
 
             if 'X' in locals():
                 X = np.concatenate((X, features_tmp))
             else:
                 X = features_tmp
 
-        counter = collections.Counter(date_rec)
+        counter = collections.Counter(singer)
         n_clusters = max(len(counter), 2)
-        print('Found N={} dates of rec, using as cluster number.'.format(n_clusters))
+        print('Found N={} singer, using as cluster number.'.format(n_clusters))
 
         if reduce:
             pca_comp = min(reduce, 2)
             reduced_data = PCA(n_components=pca_comp).fit_transform(X)
-            out_filename = '{}_{}_{}_PCA-{}c_KM-{}c.png'.format(sel_criteria[0], sel_criteria[1], classifier, pca_comp, n_clusters)
+            out_filename = '{}_{}_PCA-{}c_KM-{}c.png'.format(test, classifier, pca_comp, n_clusters)
             kmeans = KMeans(init='k-means++', n_clusters=n_clusters, n_init=10, random_state=21).fit(reduced_data)
             k_means_cluster_centers = kmeans.cluster_centers_
             k_means_labels = pairwise_distances_argmin(reduced_data, k_means_cluster_centers)
             data_clustered = kmeans.predict(reduced_data)
         else:
             kmeans = KMeans(init='k-means++', n_clusters=n_clusters, n_init=10, random_state=21).fit(X)
-            out_filename = '{}_{}_{}_{}_KM-{}c.png'.format(sel_criteria[0], sel_criteria[1], classifier, X.shape[1], n_clusters)
+            out_filename = '{}_{}_{}_KM-{}c.png'.format(test, classifier, X.shape[1], n_clusters)
             k_means_cluster_centers = kmeans.cluster_centers_
             data_clustered = kmeans.predict(X)
             reduced_data = PCA(n_components=2).fit_transform(X)
@@ -86,7 +84,7 @@ def experiment(sel_criteria, metadata, out_folder, reduce=2):
                 cluster_center = k_means_cluster_centers[k]
                 plt.scatter(cluster_center[0], cluster_center[1], s=200, c='red', marker='x')
 
-        plt.title('Singer : {} - {}'.format(singer, sel_criteria[1]))
+        plt.title('Test : {}'.format(test))
         plt.grid(True)
         plt.savefig(os.path.join(out_folder, out_filename))
         plt.show()
@@ -100,19 +98,18 @@ classifier = 'Xception'
 features_path = os.path.join('dataset', feat_type, classifier)
 metadata_file = 'metadata.csv'
 filter_criteria = ['singer', 'test']
-selection_criteria = ['Regina_Carbone', 'Diet_SL']
+selection_criteria = ['', 'Diet_LF_W']
 data = pd.read_csv(metadata_file, header=0, sep=',', names=['filename', 'singer', 'class', 'date_rec', 'test'])
-singers_list = collections.Counter(data['singer'].tolist()).keys()
+data = data.loc[data['test'] == selection_criteria[1]]
 reduce = 4
 images_dir = 'Classified_wPCA-{}c_{}'.format(reduce, selection_criteria[1])
 os.makedirs(images_dir, exist_ok=True)
 
-for singer in singers_list:
-    res = experiment(sel_criteria=[singer, selection_criteria[1]], metadata=data, out_folder=images_dir, reduce=reduce)
-    if res:
-        print('Done')
-    else:
-        print('ERROR! - No file found')
+res = experiment(test=selection_criteria[1], metadata=data, out_folder=images_dir, reduce=reduce)
+if res:
+    print('Done')
+else:
+    print('ERROR! - No file found')
 
 print('Everything done')
 
