@@ -56,7 +56,7 @@ def experiment(test, metadata, out_folder, reduce=2):
             data_clustered = kmeans.predict(reduced_data)
         else:
             kmeans = KMeans(init='k-means++', n_clusters=n_clusters, n_init=10, random_state=21).fit(X)
-            out_filename = '{}_{}_{}_KM-{}c.png'.format(test, classifier, X.shape[1], n_clusters)
+            out_filename = '{}_{}_{}_KM-{}c.png'.format(test, c, X.shape[1], n_clusters)
             k_means_cluster_centers = kmeans.cluster_centers_
             data_clustered = kmeans.predict(X)
             reduced_data = PCA(n_components=2).fit_transform(X)
@@ -84,7 +84,7 @@ def experiment(test, metadata, out_folder, reduce=2):
                 cluster_center = k_means_cluster_centers[k]
                 plt.scatter(cluster_center[0], cluster_center[1], s=200, c='red', marker='x')
 
-        plt.title('Test : {}'.format(test))
+        plt.title('Test : {}, Class: {}'.format(test, c))
         plt.grid(True)
         plt.savefig(os.path.join(out_folder, out_filename))
         plt.show()
@@ -94,23 +94,24 @@ def experiment(test, metadata, out_folder, reduce=2):
 
 
 feat_type = 'predictions'
-classifier = 'Xception'
-features_path = os.path.join('dataset', feat_type, classifier)
+classifiers = ['Xception', 'VGG19', 'ResNet50']
 metadata_file = 'metadata.csv'
 filter_criteria = ['singer', 'test']
-test = ['Diet_LF_W', 'Diet_SG', 'Diet_LF_3D','Diet_SL']
+tests = ['Diet_LF_W', 'Diet_SG', 'Diet_LF_3D','Diet_SL']
 reduction = 0
 
-for t in test:
-    data = pd.read_csv(metadata_file, header=0, sep=',', names=['filename', 'singer', 'class', 'date_rec', 'test'])
-    data = data.loc[data['test'] == t]
-    images_dir = 'Classified_wPCA-{}c_{}'.format(reduction, t)
-    os.makedirs(images_dir, exist_ok=True)
-    res = experiment(test=t, metadata=data, out_folder=images_dir, reduce=reduction)
-    if res:
-        print('Done')
-    else:
-        print('ERROR! - No file found')
+for c in classifiers:
+    features_path = os.path.join('dataset', feat_type, c)
+    for t in tests:
+        data = pd.read_csv(metadata_file, header=0, sep=',', names=['filename', 'singer', 'class', 'date_rec', 'test'])
+        data = data.loc[data['test'] == t]
+        images_dir = 'Classif_{}_wPCA-{}c_{}'.format(c, reduction, t)
+        os.makedirs(images_dir, exist_ok=True)
+        res = experiment(test=t, metadata=data, out_folder=images_dir, reduce=reduction)
+        if res:
+            print('Done')
+        else:
+            print('ERROR! - No file found')
 
 print('Everything done')
 

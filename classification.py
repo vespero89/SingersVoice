@@ -51,21 +51,21 @@ def experiment(sel_criteria, metadata, out_folder, reduce=2):
         if reduce:
             pca_comp = min(reduce, 2)
             reduced_data = PCA(n_components=pca_comp).fit_transform(X)
-            out_filename = '{}_{}_{}_PCA-{}c_KM-{}c.png'.format(sel_criteria[0], sel_criteria[1], classifier, pca_comp, n_clusters)
+            out_filename = '{}_{}_{}_PCA-{}c_KM-{}c.png'.format(sel_criteria[0], sel_criteria[1], c, pca_comp, n_clusters)
             kmeans = KMeans(init='k-means++', n_clusters=n_clusters, n_init=10, random_state=21).fit(reduced_data)
             k_means_cluster_centers = kmeans.cluster_centers_
             k_means_labels = pairwise_distances_argmin(reduced_data, k_means_cluster_centers)
             data_clustered = kmeans.predict(reduced_data)
         else:
             kmeans = KMeans(init='k-means++', n_clusters=n_clusters, n_init=10, random_state=21).fit(X)
-            out_filename = '{}_{}_{}_{}_KM-{}c.png'.format(sel_criteria[0], sel_criteria[1], classifier, X.shape[1], n_clusters)
+            out_filename = '{}_{}_{}_{}_KM-{}c.png'.format(sel_criteria[0], sel_criteria[1], c, X.shape[1], n_clusters)
             k_means_cluster_centers = kmeans.cluster_centers_
             data_clustered = kmeans.predict(X)
             reduced_data = PCA(n_components=2).fit_transform(X)
 
         # https://scikit-learn.org/stable/auto_examples/cluster/plot_mini_batch_kmeans.html#sphx-glr-auto-examples-cluster-plot-mini-batch-kmeans-py
         plt.figure(figsize=(10, 10))
-        colors = ['red', 'blue', 'black', 'green', 'yellow']
+        colors = ['red', 'blue', 'black', 'green', 'yellow', 'gray', 'pink', 'cyan']
 
         # Step size of the mesh. Decrease to increase the quality of the VQ.
         h = .02  # point in the mesh [x_min, x_max]x[y_min, y_max].
@@ -86,7 +86,7 @@ def experiment(sel_criteria, metadata, out_folder, reduce=2):
                 cluster_center = k_means_cluster_centers[k]
                 plt.scatter(cluster_center[0], cluster_center[1], s=200, c='red', marker='x')
 
-        plt.title('Singer : {} - {}'.format(singer, sel_criteria[1]))
+        plt.title('Singer : {} - {} - {}'.format(singer, sel_criteria[1], c))
         plt.grid(True)
         plt.savefig(os.path.join(out_folder, out_filename))
         plt.show()
@@ -96,23 +96,24 @@ def experiment(sel_criteria, metadata, out_folder, reduce=2):
 
 
 feat_type = 'predictions'
-classifier = 'Xception'
-features_path = os.path.join('dataset', feat_type, classifier)
+classifiers = ['Xception', 'VGG19', 'ResNet50']
 metadata_file = 'metadata.csv'
 filter_criteria = ['singer', 'test']
-selection_criteria = ['Regina_Carbone', 'Diet_SL']
+selection_criteria = ['Regina_Carbone', 'Drink']
 data = pd.read_csv(metadata_file, header=0, sep=',', names=['filename', 'singer', 'class', 'date_rec', 'test'])
 singers_list = collections.Counter(data['singer'].tolist()).keys()
-reduce = 4
-images_dir = 'Classified_wPCA-{}c_{}'.format(reduce, selection_criteria[1])
-os.makedirs(images_dir, exist_ok=True)
+reduction = 4
+for c in classifiers:
+    images_dir = 'Classified_wPCA-{}c_{}'.format(reduction, selection_criteria[1])
+    os.makedirs(images_dir, exist_ok=True)
+    features_path = os.path.join('dataset', feat_type, c)
+    for singer in singers_list:
+        res = experiment(sel_criteria=[singer, selection_criteria[1]], metadata=data,
+                         out_folder=images_dir, reduce=reduction)
+        if res:
+            print('Done')
+        else:
+            print('ERROR! - No file found')
 
-for singer in singers_list:
-    res = experiment(sel_criteria=[singer, selection_criteria[1]], metadata=data, out_folder=images_dir, reduce=reduce)
-    if res:
-        print('Done')
-    else:
-        print('ERROR! - No file found')
-
-print('Everything done')
+    print('Everything done')
 
