@@ -98,18 +98,19 @@ classifier = 'Xception'
 features_path = os.path.join('dataset', feat_type, classifier)
 metadata_file = 'metadata.csv'
 filter_criteria = ['singer', 'test']
-selection_criteria = ['', 'Diet_LF_W']
-data = pd.read_csv(metadata_file, header=0, sep=',', names=['filename', 'singer', 'class', 'date_rec', 'test'])
-data = data.loc[data['test'] == selection_criteria[1]]
-reduce = 4
-images_dir = 'Classified_wPCA-{}c_{}'.format(reduce, selection_criteria[1])
-os.makedirs(images_dir, exist_ok=True)
+test = ['Diet_LF_W', 'Diet_SG', 'Diet_LF_3D']
+reduction = 0
 
-res = experiment(test=selection_criteria[1], metadata=data, out_folder=images_dir, reduce=reduce)
-if res:
-    print('Done')
-else:
-    print('ERROR! - No file found')
+for t in test:
+    data = pd.read_csv(metadata_file, header=0, sep=',', names=['filename', 'singer', 'class', 'date_rec', 'test'])
+    data = data.loc[data['test'] == t]
+    images_dir = 'Classified_wPCA-{}c_{}'.format(reduce, t)
+    os.makedirs(images_dir, exist_ok=True)
+    res = experiment(test=t, metadata=data, out_folder=images_dir, reduce=reduction)
+    if res:
+        print('Done')
+    else:
+        print('ERROR! - No file found')
 
 print('Everything done')
 
