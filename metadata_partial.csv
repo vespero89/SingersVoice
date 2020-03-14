@@ -1,9 +1,4 @@
 FILENAME,SINGER,CLASS,DATE,TEST
-Fabio_Alberti-POST-10_09_2019.wav  ,Fabio_Alberti,POST,10_09_2019  ,Drink
-Fabio_Alberti-POST-23_08_2019.wav  ,Fabio_Alberti,POST,23_08_2019  ,Diet_SL
-Fabio_Alberti-POST-26_01_2020.wav  ,Fabio_Alberti,POST,26_01_2020  ,Drink
-Fabio_Alberti-PRE-10_09_2019.wav   ,Fabio_Alberti,PRE,10_09_2019   ,Drink
-Fabio_Alberti-PRE-23_08_2019.wav   ,Fabio_Alberti,PRE,23_08_2019   ,Drink
 Fabio_Alberti-POST-03_07_2019.wav,Fabio_Alberti,POST,03_07_2019,Drink
 Fabio_Alberti-POST-04_03_2020.wav,Fabio_Alberti,POST,04_03_2020,Diet_LF_3D
 Fabio_Alberti-POST-06_02_2020.wav,Fabio_Alberti,POST,06_02_2020,Diet_SG
@@ -29,12 +24,6 @@ Franco_Sgattoni-PRE-02_11_2019.wav,Franco_Sgattoni,PRE,02_11_2019,Drink
 Franco_Sgattoni-PRE-05_10_2019.wav,Franco_Sgattoni,PRE,05_10_2019,Drink
 Giada_Cartone-POST-21_09_2019.wav,Giada_Cartone,POST,21_09_2019,Drink
 Giada_Cartone-PRE-21_09_2019.wav,Giada_Cartone,PRE,21_09_2019,Drink
-Gloria_Galie-POST-01_08_2019.wav  ,Gloria_Galie,POST,01_08_2019  ,Drink
-Gloria_Galie-POST-16_08_2019.wav   ,Gloria_Galie,POST,16_08_2019   ,Drink
-Gloria_Galie-POST-27_08_2019.wav   ,Gloria_Galie,POST,27_08_2019   ,Drink
-Gloria_Galie-PRE-01_08_2019.wav   ,Gloria_Galie,PRE,01_08_2019   ,Drink
-Gloria_Galie-PRE-16_08_2019.wav,Gloria_Galie,PRE,16_08_2019,Drink
-Gloria_Galie-PRE-27_08_2019.wav,Gloria_Galie,PRE,27_08_2019,Drink
 Gloria_Galie-POST-06_07_2019.wav,Gloria_Galie,POST,06_07_2019,Drink
 Gloria_Galie-POST-07_07_2019.wav,Gloria_Galie,POST,07_07_2019,Drink
 Gloria_Galie-POST-12_10_2019.wav,Gloria_Galie,POST,12_10_2019,Drink
@@ -49,12 +38,6 @@ Luca_Pignati-POST-01_11_2019.wav,Luca_Pignati,POST,01_11_2019,Drink
 Luca_Pignati-POST-22_02_2020.wav,Luca_Pignati,POST,22_02_2020,Drink
 Luca_Pignati-PRE-01_11_2019.wav,Luca_Pignati,PRE,01_11_2019,Drink
 Luca_Pignati-PRE-22_02_2020.wav,Luca_Pignati,PRE,22_02_2020,Drink
-Manila_Lupini-POST-01_08_2019.wav,Manila_Lupini,POST,01_08_2019,Drink
-Manila_Lupini-POST-16_08_2019.wav,Manila_Lupini,POST,16_08_2019,Drink
-Manila_Lupini-POST-27_08_2019.wav,Manila_Lupini,POST,27_08_2019,Drink
-Manila_Lupini-PRE-01_08_2019.wav,Manila_Lupini,PRE,01_08_2019,Drink
-Manila_Lupini-PRE-16_08_2019.wav,Manila_Lupini,PRE,16_08_2019,Drink
-Manila_Lupini-PRE-27_08_2019.wav,Manila_Lupini,PRE,27_08_2019,Drink
 Manila_Lupini-POST-06_07_2019.wav,Manila_Lupini,POST,06_07_2019,Drink
 Manila_Lupini-POST-07_07_2019.wav,Manila_Lupini,POST,07_07_2019,Drink
 Manila_Lupini-POST-12_10_2019.wav,Manila_Lupini,POST,12_10_2019,Drink
@@ -84,5 +67,3 @@ Regina_Carbone-PRE-10_02_2020.wav,Regina_Carbone,PRE,10_02_2020,Diet_SG
 Regina_Carbone-PRE-16_01_2020.wav,Regina_Carbone,PRE,16_01_2020,Drink
 Regina_Carbone-PRE-17_02_2020.wav,Regina_Carbone,PRE,17_02_2020,Diet_LF_W
 Regina_Carbone-PRE-21_07_2019.wav,Regina_Carbone,PRE,21_07_2019,Drink
-Valentina_Cinquino-PRE-15_08_2019.wav,Valentina_Cinquino,PRE,15_08_2019,Drink
-Valentina_Cinquno-POST-15_08_2019.wav,Valentina_Cinquino,POST,15_08_2019,Drink
