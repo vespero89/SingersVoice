@@ -1,9 +1,9 @@
 FILENAME,SINGER,CLASS,DATE,TEST
-Fabio_Alberti-POST-10_09_2019.wav  ,Fabio_Alberti,POST,10_09_2019  ,Drink
-Fabio_Alberti-POST-23_08_2019.wav  ,Fabio_Alberti,POST,23_08_2019  ,Diet_SL
-Fabio_Alberti-POST-26_01_2020.wav  ,Fabio_Alberti,POST,26_01_2020  ,Drink
-Fabio_Alberti-PRE-10_09_2019.wav   ,Fabio_Alberti,PRE,10_09_2019   ,Drink
-Fabio_Alberti-PRE-23_08_2019.wav   ,Fabio_Alberti,PRE,23_08_2019   ,Drink
+Fabio_Alberti-POST-10_09_2019.wav,Fabio_Alberti,POST,10_09_2019,Drink
+Fabio_Alberti-POST-23_08_2019.wav,Fabio_Alberti,POST,23_08_2019,Diet_SL
+Fabio_Alberti-POST-26_01_2020.wav,Fabio_Alberti,POST,26_01_2020,Drink
+Fabio_Alberti-PRE-10_09_2019.wav,Fabio_Alberti,PRE,10_09_2019,Drink
+Fabio_Alberti-PRE-23_08_2019.wav,Fabio_Alberti,PRE,23_08_2019,Drink
 Fabio_Alberti-POST-03_07_2019.wav,Fabio_Alberti,POST,03_07_2019,Drink
 Fabio_Alberti-POST-04_03_2020.wav,Fabio_Alberti,POST,04_03_2020,Diet_LF_3D
 Fabio_Alberti-POST-06_02_2020.wav,Fabio_Alberti,POST,06_02_2020,Diet_SG
@@ -29,10 +29,10 @@ Franco_Sgattoni-PRE-02_11_2019.wav,Franco_Sgattoni,PRE,02_11_2019,Drink
 Franco_Sgattoni-PRE-05_10_2019.wav,Franco_Sgattoni,PRE,05_10_2019,Drink
 Giada_Cartone-POST-21_09_2019.wav,Giada_Cartone,POST,21_09_2019,Drink
 Giada_Cartone-PRE-21_09_2019.wav,Giada_Cartone,PRE,21_09_2019,Drink
-Gloria_Galie-POST-01_08_2019.wav  ,Gloria_Galie,POST,01_08_2019  ,Drink
-Gloria_Galie-POST-16_08_2019.wav   ,Gloria_Galie,POST,16_08_2019   ,Drink
-Gloria_Galie-POST-27_08_2019.wav   ,Gloria_Galie,POST,27_08_2019   ,Drink
-Gloria_Galie-PRE-01_08_2019.wav   ,Gloria_Galie,PRE,01_08_2019   ,Drink
+Gloria_Galie-POST-01_08_2019.wav,Gloria_Galie,POST,01_08_2019,Drink
+Gloria_Galie-POST-16_08_2019.wav,Gloria_Galie,POST,16_08_2019,Drink
+Gloria_Galie-POST-27_08_2019.wav,Gloria_Galie,POST,27_08_2019,Drink
+Gloria_Galie-PRE-01_08_2019.wav,Gloria_Galie,PRE,01_08_2019,Drink
 Gloria_Galie-PRE-16_08_2019.wav,Gloria_Galie,PRE,16_08_2019,Drink
 Gloria_Galie-PRE-27_08_2019.wav,Gloria_Galie,PRE,27_08_2019,Drink
 Gloria_Galie-POST-06_07_2019.wav,Gloria_Galie,POST,06_07_2019,Drink
@@ -72,7 +72,7 @@ Miriam_Emiliani-PRE-30_06_2019.wav,Miriam_Emiliani,PRE,30_06_2019,Not_to_use
 Miriam_Emiliani-PRE2-30_06_2019.wav,Miriam_Emiliani,PRE2,30_06_2019,Drink
 Regina_Carbone-POST-02_11_2019.wav,Regina_Carbone,POST,02_11_2019,Drink
 Regina_Carbone-POST-04_03_2020.wav,Regina_Carbone,POST,04_03_2020,Diet_LF_3D
-Regina_Carbone-POST-06_02_2020.wav,Regina_Carbone,POST,06_02_2020,Diet
+Regina_Carbone-POST-06_02_2020.wav,Regina_Carbone,POST,06_02_2020,Diet_SL
 Regina_Carbone-POST-13_02_2020.wav,Regina_Carbone,POST,13_02_2020,Diet_SG
 Regina_Carbone-POST-16_01_2020.wav,Regina_Carbone,POST,16_01_2020,Drink
 Regina_Carbone-POST-21_07_2019.wav,Regina_Carbone,POST,21_07_2019,Drink

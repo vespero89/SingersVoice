@@ -98,13 +98,13 @@ classifier = 'Xception'
 features_path = os.path.join('dataset', feat_type, classifier)
 metadata_file = 'metadata.csv'
 filter_criteria = ['singer', 'test']
-test = ['Diet_LF_W', 'Diet_SG', 'Diet_LF_3D']
+test = ['Diet_LF_W', 'Diet_SG', 'Diet_LF_3D','Diet_SL']
 reduction = 0
 
 for t in test:
     data = pd.read_csv(metadata_file, header=0, sep=',', names=['filename', 'singer', 'class', 'date_rec', 'test'])
     data = data.loc[data['test'] == t]
-    images_dir = 'Classified_wPCA-{}c_{}'.format(reduce, t)
+    images_dir = 'Classified_wPCA-{}c_{}'.format(reduction, t)
     os.makedirs(images_dir, exist_ok=True)
     res = experiment(test=t, metadata=data, out_folder=images_dir, reduce=reduction)
     if res:

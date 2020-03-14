@@ -1,9 +1,9 @@
 import os
 from tensorflow.python.keras.preprocessing import image
-#from tensorflow.python.keras.applications.vgg19 import VGG19
-#from tensorflow.python.keras.applications.resnet50 import ResNet50
+from tensorflow.python.keras.applications.vgg19 import VGG19
+from tensorflow.python.keras.applications.resnet50 import ResNet50
 from tensorflow.python.keras.applications.xception import Xception
-#from tensorflow.python.keras.applications.resnet50 import preprocess_input
+from tensorflow.python.keras.applications.resnet50 import preprocess_input
 from tensorflow.python.keras.applications.xception import preprocess_input
 from tensorflow.python.keras.models import Model
 import numpy as np
