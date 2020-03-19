@@ -132,3 +132,4 @@ images/
 *.zip
 
 results/
+results_chunked/

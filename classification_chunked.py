@@ -9,9 +9,23 @@ import collections
 from scipy.spatial import distance
 
 
-def get_features(f_name):
-    vector = np.load(f_name + '.npy')
-    return vector
+def get_features(folder, f_name):
+    files = os.listdir(folder)
+    selected_files = []
+    for f in files:
+        if f_name + '_' in f:
+            selected_files.append(f)
+    for sf in selected_files:
+        vector_tmp = np.load(os.path.join(folder, sf))
+        if 'X_chunk' in locals():
+            X_chunk = np.concatenate((X_chunk, vector_tmp))
+        else:
+            X_chunk = vector_tmp
+
+    mean_vect = X_chunk.mean(axis=0)
+    mean_vect = np.expand_dims(mean_vect, 0)
+
+    return mean_vect
 
 
 def get_labels(string):
@@ -36,7 +50,7 @@ def experiment(sel_criteria, metadata, out_folder, reduce=2):
         for file in metadata.iterrows():
             filename, _ = os.path.splitext(file[1]['filename'])
             label = get_labels(file[1]['class'])
-            features_tmp = get_features(os.path.join(features_path, filename))
+            features_tmp = get_features(features_path, filename)
             y.append(label)
             date_rec.append(file[1]['date_rec'])
             drink.append(file[1]['drink'])
@@ -94,13 +108,13 @@ def experiment(sel_criteria, metadata, out_folder, reduce=2):
 
         plt.title('Singer : {} - {} - {}'.format(singer, sel_criteria[1], c))
         plt.grid(True)
-        # plt.savefig(os.path.join(out_folder, out_filename))
-        # plt.show()
+        plt.savefig(os.path.join(out_folder, out_filename))
+        plt.show()
 
         # COMPUTE EUCLIDEAN DISTANCE
-        result_file = open(os.path.join('results', singer + '.csv'), 'a+')
-        if os.path.isfile(os.path.join('results', singer + '.csv')) \
-                and os.path.getsize(os.path.join('results', singer + '.csv')) == 0:
+        result_file = open(os.path.join('results_chunked', singer + '.csv'), 'a+')
+        if os.path.isfile(os.path.join('results_chunked', singer + '.csv')) \
+                and os.path.getsize(os.path.join('results_chunked', singer + '.csv')) == 0:
             res_string = "DATE,DISTANCE,DRINK \n"
             result_file.write(res_string)
         res_string = "{} \n".format(out_filename)
@@ -124,16 +138,16 @@ def experiment(sel_criteria, metadata, out_folder, reduce=2):
         return False
 
 plt.close('all')
-feat_type = 'predictions'
+feat_type = 'predictions_chunked'
 classifiers = ['Xception', 'VGG19', 'ResNet50']
 metadata_file = 'metadata.csv'
 filter_criteria = ['singer', 'test']
 selection_criteria = ['Regina_Carbone', 'Drink']
 data = pd.read_csv(metadata_file, header=0, sep=',', names=['filename', 'singer', 'class', 'date_rec', 'test', 'drink'])
 singers_list = collections.Counter(data['singer'].tolist()).keys()
-reduction = 4
+reduction = 2
 for c in classifiers:
-    images_dir = 'Classified_wPCA-{}c_{}'.format(reduction, selection_criteria[1])
+    images_dir = 'Chunks_Classified_wPCA-{}c_{}'.format(reduction, selection_criteria[1])
     os.makedirs(images_dir, exist_ok=True)
     features_path = os.path.join('dataset', feat_type, c)
     for singer in singers_list:
