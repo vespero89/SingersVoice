@@ -10,13 +10,10 @@ import numpy as np
 
 def get_features(img_path, classifier):
     if classifier == 'VGG19':
-        model = VGG19(weights='imagenet', include_top=False, pooling='avg')
         img = image.load_img(img_path, target_size=(224, 224))
     elif classifier == 'ResNet50':
-        model = ResNet50(weights='imagenet', include_top=False, pooling='avg')
         img = image.load_img(img_path, target_size=(224, 224))
     elif classifier == 'Xception':
-        model = Xception(weights='imagenet', include_top=False, pooling='avg')
         img = image.load_img(img_path, target_size=(299, 299))
     else:
         return False
@@ -40,10 +37,10 @@ def get_features(img_path, classifier):
     return list(flatten[0])
 
 
-feat_type = 'LOGMEL_SPECTROGRAMS_CHUNKED'
+feat_type = 'spectrograms_normalized'
 features_path = os.path.join('dataset', feat_type)
 chunked = True
-normalized = False
+normalized = True
 classifiers = ['VGG19', 'ResNet50', 'Xception']
 logmels = []
 X = []
@@ -59,6 +56,14 @@ for (_, dirs, filenames) in os.walk(features_path):
     break
 
 for c in classifiers:
+
+    if c == 'VGG19':
+        model = VGG19(weights='imagenet', include_top=False, pooling='avg')
+    elif c == 'ResNet50':
+        model = ResNet50(weights='imagenet', include_top=False, pooling='avg')
+    elif c == 'Xception':
+        model = Xception(weights='imagenet', include_top=False, pooling='avg')
+
     for lm in logmels:
         X.append(get_features(os.path.join(features_path, lm), classifier=c))
         y.append(0)
