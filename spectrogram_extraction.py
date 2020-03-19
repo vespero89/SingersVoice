@@ -47,6 +47,8 @@ def extract_spectrograms(source, dest, fs, N, overlap, win_type='hamming'):
 
 # calcola i mel, i delta e i delta-deltas
 def log_mel(filepath, fs, N, overlap, win_type='hamming', n_mels=128, fmin=0.0, fmax=None, htk=True):
+    image_filename = os.path.join(dest_path, os.path.splitext(os.path.basename(filepath))[0] + '_' + str(i))
+    image_filename = image_filename.replace('_16bit', '')
     # Load an audio file as a floating point time series
     x, fs = librosa.core.load(filepath, sr=fs, offset=5.0, duration=5.0)
     length = np.round(x.shape[0] / fs)
@@ -61,7 +63,7 @@ def log_mel(filepath, fs, N, overlap, win_type='hamming', n_mels=128, fmin=0.0, 
     coefficients = librosa.core.power_to_db(mel_filtered)
     plt.figure()
     plt.imshow(coefficients)
-    plt.savefig(filepath + '.png')
+    plt.savefig(image_filename + '.png')
 
    # delta = librosa.feature.delta(mel_filtered, delta_width*2+1, order=1, axis=-1)
     #coefficients = np.concatenate((coefficients, delta))
@@ -118,10 +120,10 @@ if __name__ == "__main__":
         makedirs(dest_path)
 
     window_type = 'hamming'
-    fft_length = 256
-    window_length = 480
-    overlap = 160
-    Fs = 16000
+    fft_length = 1024
+    window_length = 1024
+    overlap = 256
+    Fs = 44100
     n_mels = 128
     fmin = 0.0
     fmax = Fs / 2

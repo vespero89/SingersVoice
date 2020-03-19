@@ -37,8 +37,9 @@ def log_mel(filepath, out_folder, fs, N, overlap, win_type='hamming', n_mels=128
     i = 0
     for x_chunks in stream:
         image_filename = os.path.join(dest_path, out_folder, os.path.splitext(os.path.basename(filepath))[0] + '_' + str(i))
+        image_filename = image_filename.replace('_16bit', '')
         # Power spectrum
-        S = np.abs(librosa.core.stft(x_chunks, n_fft=N, window=signal.get_window(win_type, N), hop_length=N - overlap, center=False)) ** 2
+        S = np.abs(librosa.core.stft(x_chunks, n_fft=N, window=signal.get_window(win_type, N), hop_length=N-overlap, center=False)) ** 2
         # Build a Mel filter
         mel_basis = librosa.filters.mel(fs, N, n_mels, fmin, fmax, htk)
         # Filtering
@@ -70,12 +71,19 @@ def extract_log_mel(source, dest, fs, N, overlap, win_type='hamming', n_mels=128
         # np.save(path.join(dest, w[0:-4]), mels)
 
 
+def normalize_audio(source, dest):
+    wav_filenames = wav_file_list(source)
+    for w in wav_filenames:
+        x, fs = librosa.load(os.path.join(source, w), sr=Fs)
+        librosa.output.write_wav(os.path.join(dest, w), x, sr=Fs, norm=True)
+
+
 if __name__ == "__main__":
 
     root_dir = os.path.realpath('../../')
 
-    wav_dir_path = os.path.join(root_dir, 'dataset_wavs_16bit')
-    dest_path = os.path.join('dataset', 'spectrograms')
+    wav_dir_path = os.path.join(root_dir, 'dataset_wavs_norm')
+    dest_path = os.path.join('dataset', 'spectrograms_normalized')
 
     if (not os.path.exists(dest_path)):
         os.makedirs(dest_path)
@@ -83,7 +91,7 @@ if __name__ == "__main__":
     window_type = 'hamming'
     fft_length = 1024
     window_length = 1024
-    overlap = 128
+    overlap = 256
     Fs = 44100
     n_mels = 128
     fmin = 0.0
@@ -92,6 +100,8 @@ if __name__ == "__main__":
     delta_width = 2
     offset = 5
     duration = 5
+
+    # normalize_audio(wav_dir_path, dest_path)
 
     extract_log_mel(wav_dir_path, dest_path, fs=Fs, N=window_length, overlap=overlap, win_type=window_type, n_mels=n_mels, fmin=fmin, fmax=fmax, htk=htk)
 
