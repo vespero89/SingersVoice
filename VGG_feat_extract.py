@@ -25,7 +25,7 @@ def get_features(img_path):
     x = np.expand_dims(x, axis=0)
     x = preprocess_input(x)
     flatten = model.predict(x)
-    features_name = os.path.join('dataset', 'predictions', classifier, os.path.basename(img_path))
+    features_name = os.path.join('dataset', 'predictions_chunked', classifier, os.path.basename(img_path))
     np.save(features_name, flatten)
     return list(flatten[0])
 
@@ -44,12 +44,15 @@ def get_features(img_path):
 
 X = []
 y = []
-feat_type = 'LOGMEL_SPECTROGRAMS'
+feat_type = 'LOGMEL_SPECTROGRAMS_CHUNKED'
 features_path = os.path.join('dataset', feat_type)
 
 logmels = []
-for (_, _, filenames) in os.walk(features_path):
-    logmels.extend(filenames)
+for (_, dirs, filenames) in os.walk(features_path):
+    for d in dirs:
+        files = os.listdir(os.path.join(features_path, d))
+        for f in files:
+            logmels.append(os.path.join(d, f))
     break
 
 for lm in logmels:

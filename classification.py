@@ -6,6 +6,7 @@ from sklearn.cluster import KMeans
 from sklearn.metrics.pairwise import pairwise_distances_argmin
 import matplotlib.pyplot as plt
 import collections
+from scipy.spatial import distance
 
 
 def get_features(f_name):
@@ -31,12 +32,14 @@ def experiment(sel_criteria, metadata, out_folder, reduce=2):
         y = []
         date_rec = []
         plot_label = []
+        drink = []
         for file in metadata.iterrows():
             filename, _ = os.path.splitext(file[1]['filename'])
             label = get_labels(file[1]['class'])
             features_tmp = get_features(os.path.join(features_path, filename))
             y.append(label)
             date_rec.append(file[1]['date_rec'])
+            drink.append(file[1]['drink'])
             plot_label.append(file[1]['date_rec'] + '_' + file[1]['class'])
 
             if 'X' in locals():
@@ -88,21 +91,44 @@ def experiment(sel_criteria, metadata, out_folder, reduce=2):
 
         plt.title('Singer : {} - {} - {}'.format(singer, sel_criteria[1], c))
         plt.grid(True)
-        plt.savefig(os.path.join(out_folder, out_filename))
-        plt.show()
+        # plt.savefig(os.path.join(out_folder, out_filename))
+        # plt.show()
+
+        # COMPUTE EUCLIDEAN DISTANCE
+        result_file = open(os.path.join('results', singer + '.csv'), 'a+')
+        if os.path.isfile(os.path.join('results', singer + '.csv')) \
+                and os.path.getsize(os.path.join('results', singer + '.csv')) == 0:
+            res_string = "DATE,DISTANCE,DRINK \n"
+            result_file.write(res_string)
+        res_string = "{} \n".format(out_filename)
+        result_file.write(res_string)
+        for d in counter.keys():
+            indices = date_rec.index(d)
+            if reduce:
+                data_for_dist = reduced_data[indices, :]
+            else:
+                data_for_dist = X[indices, :]
+            # euclidean_distance = distance.euclidean(data_for_dist[0], data_for_dist[1])
+            euclidean_distance = np.linalg.norm(data_for_dist[0] - data_for_dist[1])
+            feat_name_post = singer + '-POST-' + d
+            drink = metadata.loc[metadata['filename'] == feat_name_post + '.wav']['drink'].values
+            drink = str(drink[0])
+            res_string = "{},{distance},{drink} \n".format(d, distance="{0:.7f}".format(euclidean_distance), drink=drink)
+            result_file.write(res_string)
+        result_file.close()
         return True
     else:
         return False
 
-
+plt.close('all')
 feat_type = 'predictions'
 classifiers = ['Xception', 'VGG19', 'ResNet50']
 metadata_file = 'metadata.csv'
 filter_criteria = ['singer', 'test']
 selection_criteria = ['Regina_Carbone', 'Drink']
-data = pd.read_csv(metadata_file, header=0, sep=',', names=['filename', 'singer', 'class', 'date_rec', 'test'])
+data = pd.read_csv(metadata_file, header=0, sep=',', names=['filename', 'singer', 'class', 'date_rec', 'test', 'drink'])
 singers_list = collections.Counter(data['singer'].tolist()).keys()
-reduction = 4
+reduction = 0
 for c in classifiers:
     images_dir = 'Classified_wPCA-{}c_{}'.format(reduction, selection_criteria[1])
     os.makedirs(images_dir, exist_ok=True)
