@@ -133,3 +133,7 @@ images/
 
 results/
 results_chunked/
+
+results_chunked_norm/
+
+res_comparison*
